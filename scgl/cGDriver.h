@@ -15,8 +15,9 @@ struct GLFWwindow;
 extern FILE* gLogFile;
 
 #ifdef NDEBUG
-#define NOTIMPL()
+#define NOTIMPL() { if (gLogFile == nullptr) gLogFile = fopen("cGDriver.notimpl.log", "w"); fprintf(gLogFile, "%s\n", __FUNCSIG__); fflush(gLogFile); }
 #define SIZE_CHECK(...)
+#define SIZE_CHECK_RETVAL(...)
 #else
 #define NOTIMPL() { if (gLogFile == nullptr) gLogFile = fopen("cGDriver.notimpl.log", "w"); fprintf(gLogFile, "%s\n", __FUNCSIG__); fflush(gLogFile); }
 #define UNEXPECTED NOTIMPL
@@ -115,7 +116,7 @@ namespace nSCGL
 
 		// We're taking the GZCLSID of the original GL driver and overriding
 		// it by presenting a higher version number to the GZCOM.
-		static const uint32_t kSCGLGDriverGZCLSID = 0xc4554841;
+		static const uint32_t kSCGLGDriverGZCLSID = 0xBADB6906;
 
 		static bool FactoryFunctionPtr2(uint32_t riid, void** ppvObj) {
 			cGDriver* pDriver = new cGDriver();

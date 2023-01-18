@@ -305,7 +305,8 @@ namespace nSCGL
 	}
 
 	void cGDriver::DepthMask(bool flag) {
-		glDepthMask(flag);
+		NOTIMPL();
+		//glDepthMask(flag);
 	}
 
 	void cGDriver::StencilFunc(GLenum gdFunc, GLint ref, GLuint mask) {

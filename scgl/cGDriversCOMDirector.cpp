@@ -4,7 +4,7 @@
 
 namespace nSCGL
 {
-	static const uint32_t kSCVKGDriverPluginCOMDirectorID = 0xCB6EC543;
+	static const uint32_t kSCVKGDriverPluginCOMDirectorID = 0x64B2A903;
 
 	class cGDriversCOMDirector : public cRZCOMDllDirector
 	{
