@@ -73,7 +73,7 @@ namespace nSCGL
 
 		GLenum mode = drawModeMap[gdMode];
 
-		NOTIMPL();
+		//NOTIMPL();
 		SetTextureState();
 		glDrawArrays(mode, first, count);
 	}
@@ -85,7 +85,7 @@ namespace nSCGL
 		GLenum mode = drawModeMap[gdMode];
 		GLenum type = typeMap[gdType];
 
-		NOTIMPL();
+		//NOTIMPL();
 		SetTextureState();
 		glDrawElements(mode, count, type, indices);
 	}
@@ -140,27 +140,27 @@ namespace nSCGL
 	}
 
 	void cGDriver::SetTextureState() {
-		/*for (uint32_t i = 0; i < maxTextureUnits; i++) { // TODO: NOTIMPL(): 0x28 (repeated by size 0xc) - texture data?
-			if (false) { // NOTIMPL()
-				if (false) { // NOTIMPL()
-					if (false) { // NOTIMPL() - *(this + 0xF4) != 0
-						glClientActiveTexture(GL_TEXTURE0 + i);
-					}
+		for (uint32_t i = 0; i < maxTextureUnits; i++) { // TODO: NOTIMPL(): 0x28 (repeated by size 0xc) - texture data?
+			 if (true) { // NOTIMPL()
+			 	if (true) { // NOTIMPL()
+			 		if (true) { // NOTIMPL() - *(this + 0xF4) != 0
+			 			glClientActiveTexture(GL_TEXTURE0 + i);
+			 		}
 
-					glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-					// NOTIMPL()
-				}
-			}
-			else {
-				if (false) { // NOTIMPL() - *(this + 0xF4) != 0
-					glClientActiveTexture(GL_TEXTURE0 + i);
-				}
+			 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			 		// NOTIMPL()
+			 	}
+			 }
+			 else {
+			 	if (false) { // NOTIMPL() - *(this + 0xF4) != 0
+			 		glClientActiveTexture(GL_TEXTURE0 + i);
+			 	}
 
-				if (false) { // NOTIMPL()
-					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				}
-			}
-		}*/
+			 	if (false) { // NOTIMPL()
+			 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			 	}
+			 }
+		}
 	}
 
 	uint32_t cGDriver::MakeVertexFormat(uint32_t, intptr_t gdElementTypePtr) {
@@ -305,8 +305,8 @@ namespace nSCGL
 	}
 
 	void cGDriver::DepthMask(bool flag) {
-		NOTIMPL();
-		//glDepthMask(flag);
+		glFlush();
+		glDepthMask(flag);
 	}
 
 	void cGDriver::StencilFunc(GLenum gdFunc, GLint ref, GLuint mask) {
@@ -520,6 +520,10 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(destLeft, destTop, unknownWidth1, unknownHeight1);
+		PRINT_VALUES(gdTexFormat, gdType, unknownBuffer1, unknown5);
+		PRINT_VALUES(unknownBuffer2);
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}
@@ -539,6 +543,10 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(destLeft, destTop, unknownWidth1, unknownHeight1);
+		PRINT_VALUES(unknownWidth2, unknownHeight2, gdTexFormat, gdType);
+		PRINT_VALUES(unknownBuffer1, unknownBool, unknownBuffer2);
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}
@@ -557,6 +565,10 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(unknown0, unknown1, unknown2, unknown3);
+		PRINT_VALUES(gdTexFormat, gdType, unknownBuffer1, unknown5);
+		PRINT_VALUES(unknownBuffer2, unknown7);
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}
@@ -577,6 +589,11 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(destLeft, destTop, unknownWidth1, unknownHeight1);
+		PRINT_VALUES(unknownWidth2, unknownHeight2, gdTexFormat, gdType);
+		PRINT_VALUES(unknownBuffer1, unknown7, unknownBuffer2, unknown9);
+
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}
@@ -594,6 +611,10 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(unknown0, unknown1, unknown2, gdTexFormat);
+		PRINT_VALUES(gdType, unknownBuffer1, unknown4, unknownBuffer2);
+		PRINT_VALUES(unknown6);
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}
@@ -614,6 +635,10 @@ namespace nSCGL
 	{
 		uint8_t const* unknownUintBuffer1 = reinterpret_cast<uint8_t const*>(unknownBuffer1);
 		uint8_t const* unknownUintBuffer2 = reinterpret_cast<uint8_t const*>(unknownBuffer2);
+		NOTIMPL();
+		PRINT_VALUES(destLeft, destTop, unknownWidth1, unknownHeight1);
+		PRINT_VALUES(unknownWidth2, unknownHeight2, gdTexFormat, gdType);
+		PRINT_VALUES(unknownBuffer1, unknown7, unknownBuffer2, unknown9);
 
 		SetLastError(DriverError::NOT_SUPPORTED);
 	}

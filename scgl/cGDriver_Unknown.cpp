@@ -32,18 +32,18 @@ namespace nSCGL
 			*ppvObj = static_cast<cIGZGDriverLightingExtension*>(this);
 			break;
 
-		/*case GZIID_cIGZGDriverVertexBufferExtension:
-			MessageBoxA(NULL, "cIGZGDriverVertexBufferExtension", "cGDriver::QueryInterface", 0);
+		case GZIID_cIGZGDriverVertexBufferExtension:
 			*ppvObj = static_cast<cIGZGDriverVertexBufferExtension*>(this);
-			break;*/
+			break;
 
 		case GZIID_cIGZGSnapshotExtension:
 			*ppvObj = static_cast<cIGZGSnapshotExtension*>(this);
 			break;
 
 		default:
-			//sprintf_s(buf, "%x", riid);
-			//MessageBoxA(NULL, buf, "Unknown interface ID in GDriver", MB_ICONERROR);
+			char buf[512];
+			sprintf(buf, "%x", riid);
+			MessageBoxA(NULL, buf, "Unknown interface ID in GDriver", MB_ICONERROR);
 			return false;
 		}
 

@@ -278,6 +278,9 @@ namespace nSCGL
 	}
 
 	void cGDriver::LoadTextureLevel(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, uint32_t gdTexFormat, uint32_t gdType, uint32_t pixelStorageMode, void const* pixels) {
+		PRINT_VALUES(texture, level, xoffset, yoffset );
+		PRINT_VALUES(width, height, gdTexFormat, gdType);
+		PRINT_VALUES(pixelStorageMode, pixels);
 		GLenum glFormat = formatMap[gdTexFormat];
 		GLenum glType = typeMap[gdType];
 
