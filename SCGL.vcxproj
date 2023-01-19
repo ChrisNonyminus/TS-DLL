@@ -24,7 +24,6 @@
     <ClCompile Include="scgl\ext\cGDriver_VertexBuffers.cpp" />
     <ClCompile Include="vendor\framework\src\cRZCOMDllDirector.cpp" />
     <ClCompile Include="vendor\framework\src\cRZRefCount.cpp" />
-    <ClCompile Include="vendor\framework\src\cRZString.cpp" />
     <ClCompile Include="vendor\glew\src\glew.c" />
     <ClCompile Include="vendor\glfw\src\context.c" />
     <ClCompile Include="vendor\glfw\src\egl_context.c" />
@@ -124,7 +123,7 @@
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /Gw %(AdditionalOptions)</AdditionalOptions>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -132,6 +131,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ControlFlowGuard>false</ControlFlowGuard>
       <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <StringPooling>true</StringPooling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

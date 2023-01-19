@@ -119,11 +119,14 @@ namespace nSCGL
 	}
 
 	void cGDriver::TexStage(GLenum texture) {
-		//NOTIMPL();
+		if (videoModes[currentVideoMode].supportsMultitexture || texture != 0) {
+			if (texture < maxTextureUnits) {
+				activeTextureStage = texture;
+				glClientActiveTexture(GL_TEXTURE0 + texture);
+				return;
+			}
 
-		if (texture != 0) {
-			activeTextureStage = texture;
-			glClientActiveTexture(GL_TEXTURE0 + texture);
+			SetLastError(DriverError::INVALID_VALUE);
 		}
 	}
 
@@ -192,7 +195,11 @@ namespace nSCGL
 		}
 #endif
 
-		//NOTIMPL();
+		if (!videoModes[currentVideoMode].supportsTextureEnvCombine) {
+			SetLastError(DriverError::INVALID_VALUE);
+			return;
+		}
+
 		glTexEnvi(GL_TEXTURE_ENV, pnameMap[gdParamType], paramMap[gdParam]);
 	}
 
@@ -210,7 +217,11 @@ namespace nSCGL
 		}
 #endif
 
-		//NOTIMPL();
+		if (!videoModes[currentVideoMode].supportsTextureEnvCombine) {
+			SetLastError(DriverError::INVALID_VALUE);
+			return;
+		}
+
 		glTexEnvi(GL_TEXTURE_ENV, pnameMap[gdParamType], paramMap[gdParam]);
 	}
 
@@ -225,7 +236,11 @@ namespace nSCGL
 		}
 #endif
 
-		//NOTIMPL();
+		if (!videoModes[currentVideoMode].supportsTextureEnvCombine) {
+			SetLastError(DriverError::INVALID_VALUE);
+			return;
+		}
+
 		glTexEnvi(GL_TEXTURE_ENV, pnameMap[gdParamType], paramMap[gdBlend]);
 	}
 
@@ -240,7 +255,11 @@ namespace nSCGL
 		}
 #endif
 
-		//NOTIMPL();
+		if (!videoModes[currentVideoMode].supportsTextureEnvCombine) {
+			SetLastError(DriverError::INVALID_VALUE);
+			return;
+		}
+
 		glTexEnvfv(GL_TEXTURE_ENV, pnameMap[gdPname], &paramMap[gdParam]);
 	}
 
@@ -277,10 +296,7 @@ namespace nSCGL
 		return textureId;
 	}
 
-	void cGDriver::LoadTextureLevel(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, uint32_t gdTexFormat, uint32_t gdType, uint32_t pixelStorageMode, void const* pixels) {
-		PRINT_VALUES(texture, level, xoffset, yoffset );
-		PRINT_VALUES(width, height, gdTexFormat, gdType);
-		PRINT_VALUES(pixelStorageMode, pixels);
+    void cGDriver::LoadTextureLevel(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, uint32_t gdTexFormat, uint32_t gdType, uint32_t rowLength, void const* pixels) {
 		GLenum glFormat = formatMap[gdTexFormat];
 		GLenum glType = typeMap[gdType];
 
@@ -291,12 +307,12 @@ namespace nSCGL
 		GLint texParamWidth, texParamHeight, internalFormat;
 		glGetTexLevelParameteriv(GL_TEXTURE_2D, level, GL_TEXTURE_WIDTH, &texParamWidth);
 
-		if (glGetError() == GL_NO_ERROR && width != 0) {
+		if (glGetError() == GL_NO_ERROR && texParamWidth != 0) {
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, level, GL_TEXTURE_HEIGHT, &texParamHeight);
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, level, GL_TEXTURE_INTERNAL_FORMAT, &internalFormat);
 
 			if (glFormat >= GL_COMPRESSED_RGB_S3TC_DXT1_EXT && glFormat <= GL_COMPRESSED_RGBA_S3TC_DXT5_EXT) {
-				GLsizei size = ((width + 3) >> 2) * ((height + 3) >> 2) * (8 + (glFormat >= GL_COMPRESSED_RGBA_S3TC_DXT1_EXT ? 8 : 0));
+				GLsizei size = ((width + 3) >> 2) * ((height + 3) >> 2) * (8 + (glFormat >= GL_COMPRESSED_RGBA_S3TC_DXT3_EXT ? 8 : 0));
 				if (xoffset == 0 && yoffset == 0 && width == texParamWidth && height == texParamHeight) {
 					glCompressedTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, size, pixels);
 				}
@@ -307,7 +323,7 @@ namespace nSCGL
 				return;
 			}
 
-			glPixelStorei(GL_UNPACK_ROW_LENGTH, pixelStorageMode);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
 
 			if (xoffset == 0 && yoffset == 0 && width == texParamWidth && height == texParamHeight) {
 				glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, glFormat, glType, pixels);

@@ -39,7 +39,6 @@ namespace nSCGL
 #ifndef NDEBUG
 		dbgLastError(GL_NO_ERROR),
 #endif
-		areVideoModesLoaded(false),
 		currentVideoMode(-1),
 		driverInfo("Maxis 3D GDriver\nOpenGL\n3.0\n"),
 		videoModeCount(0),
@@ -61,7 +60,7 @@ namespace nSCGL
 		activeTextureStage(0),
 		maxTextureUnits(0),
 		deviceContext(nullptr),
-		bufferRegions()
+		bufferRegionFlags(0)
 	{
 	}
 
@@ -121,13 +120,13 @@ namespace nSCGL
 			if (colorArrayEnabled) {
 				glDisableClientState(GL_COLOR_ARRAY);
 				colorArrayEnabled = false;
+				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 		}
 		else {
 			if (!colorArrayEnabled) {
 				glEnableClientState(GL_COLOR_ARRAY);
 				colorArrayEnabled = true;
-				glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 
 			int colorOffset = VertexFormatElementOffset(format, 5, 0);
@@ -228,7 +227,7 @@ namespace nSCGL
 
 		stride *= sizeof(GLfloat);
 		if ((gdVertexFormat & 0xf) != 0) {
-			uint32_t addlStride = ((gdVertexFormat >> 12) & 0xf)
+			uint32_t addlStride = ((gdVertexFormat >> 18) & 0xf)
 				+ (((gdVertexFormat >> 6) & 1) * 3)
 				+ (((gdVertexFormat >> 22) & 0xf) * 4)
 				+ ((gdVertexFormat >> 2) & 7)
@@ -270,15 +269,10 @@ namespace nSCGL
 	}
 
 	void cGDriver::Clear(GLbitfield mask) {
-		static FILE* clearLog = fopen("cGDriver.clear.log", "w");
-		fprintf(clearLog, "%x\n", mask);
-		fflush(clearLog);
-
 		GLbitfield glMask = 0;
 		glMask  = (mask & 0x1000) >> 4; // GL_DEPTH_BUFFER_BIT   (0x100)
 		glMask |= (mask & 0x2000) >> 3; // GL_STENCIL_BUFFER_BIT (0x400)
 		glMask |= (mask & 0x4000);      // GL_COLOR_BUFFER_BIT   (0x4000)
-		//glClear(glMask | GL_COLOR_BUFFER_BIT);
 		glClear(glMask);
 	}
 
@@ -311,13 +305,16 @@ namespace nSCGL
 
 	void cGDriver::StencilFunc(GLenum gdFunc, GLint ref, GLuint mask) {
 		SIZE_CHECK(gdFunc, glFuncMap);
-		//NOTIMPL();
-		glStencilFunc(glFuncMap[gdFunc], ref, mask);
+
+		if (videoModes[currentVideoMode].supportsStencilBuffer) {
+			glStencilFunc(glFuncMap[gdFunc], ref, mask);
+		}
 	}
 
 	void cGDriver::StencilMask(GLuint mask) {
-		//NOTIMPL();
-		glStencilMask(mask);
+		if (videoModes[currentVideoMode].supportsStencilBuffer) {
+			glStencilMask(mask);
+		}
 	}
 
 	void cGDriver::StencilOp(GLenum fail, GLenum zfail, GLenum zpass) {
@@ -326,8 +323,9 @@ namespace nSCGL
 		SIZE_CHECK(zfail, glStencilMap);
 		SIZE_CHECK(zpass, glStencilMap);
 
-		//NOTIMPL();
-		glStencilOp(glStencilMap[fail], glStencilMap[zfail], glStencilMap[zpass]);
+		if (videoModes[currentVideoMode].supportsStencilBuffer) {
+			glStencilOp(glStencilMap[fail], glStencilMap[zfail], glStencilMap[zpass]);
+		}
 	}
 
 	void cGDriver::BlendFunc(GLenum sfactor, GLenum dfactor) {
@@ -351,10 +349,14 @@ namespace nSCGL
 
 	void cGDriver::Fog(uint32_t gdFogParamType, uint32_t gdFogParam) {
 		static GLenum fogParamMap[] = { GL_EXP, GL_EXP2, GL_LINEAR, GL_FOG_COORD, GL_ZERO };
+		SIZE_CHECK(gdFogParamType, fogParamTypeMap);
+		SIZE_CHECK(gdFogParam, fogParamMap);
+
 		glFogi(fogParamTypeMap[gdFogParamType], fogParamMap[gdFogParam]);
 	}
 
 	void cGDriver::Fog(uint32_t gdFogParamType, GLfloat const* params) {
+		SIZE_CHECK(gdFogParamType, fogParamTypeMap);
 		glFogfv(fogParamTypeMap[gdFogParamType], params);
 	}
 
