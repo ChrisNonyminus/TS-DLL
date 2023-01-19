@@ -11,45 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scgl\cGDriver.cpp" />
-    <ClCompile Include="scgl\cGDriversCOMDirector.cpp" />
-    <ClCompile Include="scgl\cGDriver_Info.cpp" />
-    <ClCompile Include="scgl\cGDriver_Init.cpp" />
-    <ClCompile Include="scgl\cGDriver_Textures.cpp" />
-    <ClCompile Include="scgl\cGDriver_Unknown.cpp" />
-    <ClCompile Include="scgl\cGDriver_Viewport.cpp" />
-    <ClCompile Include="scgl\ext\cGDriver_BufferRegions.cpp" />
-    <ClCompile Include="scgl\ext\cGDriver_Lighting.cpp" />
-    <ClCompile Include="scgl\ext\cGDriver_Snapshot.cpp" />
-    <ClCompile Include="scgl\ext\cGDriver_VertexBuffers.cpp" />
+    <ClCompile Include="cTest.cpp" />
+    <ClCompile Include="tsdll\cRZString.cpp" />
     <ClCompile Include="vendor\framework\src\cRZCOMDllDirector.cpp" />
     <ClCompile Include="vendor\framework\src\cRZRefCount.cpp" />
-    <ClCompile Include="vendor\glew\src\glew.c" />
-    <ClCompile Include="vendor\glfw\src\context.c" />
-    <ClCompile Include="vendor\glfw\src\egl_context.c" />
-    <ClCompile Include="vendor\glfw\src\init.c" />
-    <ClCompile Include="vendor\glfw\src\input.c" />
-    <ClCompile Include="vendor\glfw\src\monitor.c" />
-    <ClCompile Include="vendor\glfw\src\osmesa_context.c" />
-    <ClCompile Include="vendor\glfw\src\vulkan.c" />
-    <ClCompile Include="vendor\glfw\src\wgl_context.c" />
-    <ClCompile Include="vendor\glfw\src\win32_init.c" />
-    <ClCompile Include="vendor\glfw\src\win32_joystick.c" />
-    <ClCompile Include="vendor\glfw\src\win32_monitor.c" />
-    <ClCompile Include="vendor\glfw\src\win32_thread.c" />
-    <ClCompile Include="vendor\glfw\src\win32_time.c" />
-    <ClCompile Include="vendor\glfw\src\win32_window.c" />
-    <ClCompile Include="vendor\glfw\src\window.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="scgl\cGDriver.h" />
-    <ClInclude Include="scgl\cIGZBuffer.h" />
-    <ClInclude Include="scgl\cIGZGDriver.h" />
-    <ClInclude Include="scgl\ext\cIGZGBufferRegionExtension.h" />
-    <ClInclude Include="scgl\ext\cIGZGDriverLightingExtension.h" />
-    <ClInclude Include="scgl\ext\cIGZGDriverVertexBufferExtension.h" />
-    <ClInclude Include="scgl\ext\cIGZGSnapshotExtension.h" />
-    <ClInclude Include="scgl\sGDMode.h" />
+    <ClInclude Include="cTest.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

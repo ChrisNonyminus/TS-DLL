@@ -82,7 +82,7 @@ class cIGZCOMDirector : public cIGZUnknown
 		 * Child directors should be added prior to initialization to ensure
 		 * that the child directors are also properly initialized.
 		 */
-		virtual void AddDirector(cIGZCOMDirector* pCOMDirector) = 0;
+		virtual void AddDirector(cRZCOMDllDirector* pCOMDirector) = 0;
 
 		/**
 		 * @brief Stores the path to this library in the given parameter

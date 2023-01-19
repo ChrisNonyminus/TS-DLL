@@ -1,74 +1,87 @@
 #pragma once
+
+#include <map>
+#include <vector>
 #include "cIGZCOMDirector.h"
 #include "cIGZFrameWorkHooks.h"
+#include "cIGZFrameWork.h"
+#include "cRZString.h"
 
-class cRZCOMSlimDllDirector : public cIGZCOMDirector, public cIGZFrameWorkHooks
+typedef uint32_t GZGUID;
+typedef uint32_t GZIID;
+typedef uint32_t GZCLSID;
+
+class cRZCOMDllDirector : public cIGZCOMDirector
 {
-	public:
-		typedef void (*DummyFunctionPtr)();
-		typedef cIGZUnknown* (*FactoryFunctionPtr1)();
-		typedef bool (*FactoryFunctionPtr2)(uint32_t, void**);
+public:
+    cRZCOMDllDirector();
+    virtual ~cRZCOMDllDirector();
 
-	public:
-		cRZCOMSlimDllDirector(uint32_t classId, FactoryFunctionPtr2 classFactory);
-		virtual ~cRZCOMSlimDllDirector(void);
+public:
+    virtual bool QueryInterface(GZIID iid, void** outPtr);
+    virtual uint32_t AddRef();
+    virtual uint32_t Release();
 
-	public:
-		virtual uint32_t GetDirectorID(void) const = 0;
+public:
+    typedef void (*DummyFunctionPtr)();
+    typedef cIGZUnknown* (*FactoryFunctionPtr1)();
+    typedef bool (*FactoryFunctionPtr2)(uint32_t, void**);
 
-		virtual bool QueryInterface(uint32_t riid, void** ppvObj);
-		virtual uint32_t AddRef(void);
-		virtual uint32_t Release(void);
+    virtual bool InitializeCOM(cIGZCOM* com, const cIGZString& libraryPath);
+    virtual bool OnStart(cIGZCOM* com);
 
-		virtual uint32_t RemoveRef(void);
-		virtual uint32_t RefCount(void);
+    virtual void EnumClassObjects(ClassObjectEnumerationCallback callback, void* context);
+    virtual bool GetClassObject(GZGUID clsid, GZIID iid, void** outPtr);
 
-	public:
-		bool InitializeCOM(cIGZCOM* pCOM, const cIGZString& sLibraryPath);
-		bool OnStart(cIGZCOM* pCOM);
-		bool GetLibraryPath(cIGZString& sLibraryPath);
+    virtual bool CanUnloadNow(void);
+    virtual bool OnUnload(void);
 
-		virtual bool GetClassObject(uint32_t rclsid, uint32_t riid, void** ppvObj);
-		bool OnUnload(void) { return true; }
-		cIGZFrameWork* FrameWork(void);
-		cIGZCOM* GZCOM(void);
-		void EnumClassObjects(ClassObjectEnumerationCallback pCallback, void* pContext);
-		bool CanUnloadNow(void);
-		void AddDirector(cIGZCOMDirector* pCOMDirector);
-		uint32_t GetHeapAllocatedSize(void);
+    virtual uint32_t RefCount(void);
+    virtual uint32_t RemoveRef(void);
 
-	public:
-		bool PreFrameWorkInit(void);
-		bool PreAppInit(void);
-		bool PostAppInit(void);
-		bool PreAppShutdown(void);
-		bool PostAppShutdown(void);
-		bool PostSystemServiceShutdown(void);
-		bool AbortiveQuit(void);
-		bool OnInstall(void);
+    virtual cIGZFrameWork* FrameWork(void);
+    virtual cIGZCOM* GZCOM(void);
 
-	protected:
-		enum FactorFunctionType {
-			kFactorFunctionType1 = 1,
-			kFactorFunctionType2 = 2
-		};
+    virtual GZGUID GetDirectorID() const = 0;
+    virtual bool GetLibraryPath(cIGZString& path);
+    virtual uint32_t GetHeapAllocatedSize(void);
 
-		enum GZIIDList {
-			GZIID_cIGZFrameWorkHooks = 0x03FA40BF,
-			kGZIID_cIGZCOMDirector = 0xA21EE941
-		};
+public:
+    void AddCls(GZCLSID clsid, FactoryFunctionPtr1 ffp);
+    void AddCls(GZCLSID clsid, FactoryFunctionPtr2 ffp);
+    void AddDirector(cRZCOMDllDirector* director);
 
-	protected:
-		uint32_t mnRefCount;
-		uint32_t mDirectorID;
-		char* msLibraryPath;
-		cIGZCOM* mpCOM;
-		cIGZFrameWork* mpFrameWork;
+public:
+    virtual bool PreFrameworkInit(void);
+    virtual bool PreAppInit(void);
+    virtual bool PostAppInit(void);
+    virtual bool PreAppShutdown(void);
+    virtual bool PostAppShutdown(void);
+    virtual bool PostSystemServiceShutdown(void);
+    virtual bool AbortiveQuit(void);
+    virtual bool OnInstall(void);
 
-		uint32_t classId;
-		FactoryFunctionPtr2 classFactory;
+protected:
+    enum FactoryFunctionType
+    {
+        kFactoryFunctionType1 = 1,
+        kFactoryFunctionType2 = 2,
+    };
+
+    typedef std::vector<cRZCOMDllDirector*> ChildDirectorArray;
+    typedef std::pair<DummyFunctionPtr, FactoryFunctionType> FactoryFuncRecord;
+    typedef std::map<GZCLSID, FactoryFuncRecord> ClassObjectMap;
+
+    uint32_t refCount;
+    cRZString libraryPath;
+    cIGZFrameWork* framework;
+    cIGZCOM* com;
+    ChildDirectorArray childDirectors;
+    ClassObjectMap classObjectMap;
 };
 
-cRZCOMSlimDllDirector* RZGetCOMDllDirector();
-inline cIGZFrameWork* RZGetFrameWork() { return RZGetCOMDllDirector()->FrameWork(); }
-inline cIGZFrameWork* RZGetFramework() { return RZGetCOMDllDirector()->FrameWork(); }
+cRZCOMDllDirector *RZGetCOMDllDirector();
+
+inline cIGZFrameWork *RZGetFrameWork() { return RZGetCOMDllDirector()->FrameWork(); }
+
+inline cIGZFrameWork *RZGetFramework() { return RZGetCOMDllDirector()->FrameWork(); }
